@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula: Manipulação e Processamento de Vetores em Python</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        /* Reading Progress Bar */
+        #scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: transparent;
+            z-index: 50;
+        }
+
+        #scroll-progress-bar {
+            height: 100%;
+            background: #2563eb;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-output { color: #059669; }
+        .code-error { color: #dc2626; }
+        .code-keyword { color: #2563eb; font-weight: bold; }
+
+        /* Array Visualization */
+        .array-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+        
+        .array-element-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .array-box {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            color: #0f172a;
+            font-size: 1.5rem;
+            font-weight: 600;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .array-box.highlight {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .array-index {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Reading Progress -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Hero Header -->
+    <header class="max-w-3xl mx-auto px-6 pt-24 pb-12">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 text-gray-900 leading-tight tracking-tight">Manipulação de Vetores em Python</h1>
+        <h2 class="text-xl text-gray-500 font-light">Métodos, laços de repetição e funções para análise de dados</h2>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl mx-auto px-6">
+
+        <!-- Introdução -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Guia Prático de Processamento de Listas</h2>
+            <p class="mb-4">Para analisar conjuntos de dados armazenados em vetores (como séries temporais, registros estatísticos ou listas numéricas), precisamos dominar técnicas essenciais: <strong>identificar dimensões</strong>, <strong>percorrer elementos sequencialmente</strong>, <strong>acumular totais</strong>, <strong>buscar valores</strong> e <strong>localizar extremos (máximos e mínimos)</strong>.</p>
+            
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 my-6 text-blue-900 rounded-r">
+                <i class="fas fa-info-circle mr-2"></i> <strong>Nota:</strong> Esta página traz exemplos conceituais de código para demonstrar o funcionamento dos algoritmos e das funções nativas do Python.
+            </div>
+        </section>
+
+        <!-- Seção 1: Limites, Tamanho e Índices Extremidades -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">1. Dimensão e Limites do Vetor</h2>
+            <p class="mb-4">Antes de manipular uma lista, é fundamental saber a quantidade total de itens que ela armazena e como acessar o primeiro e o último valor de forma segura.</p>
+
+            <div class="my-8">
+                <div class="font-mono text-lg mb-4 text-gray-800">vendas = [150, 200, 120, 310, 250, 180]</div>
+                
+                <p class="text-sm text-gray-500 mb-4">Passe o mouse sobre os elementos para visualizar os índices correspondentes:</p>
+                <div class="array-container">
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">150</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[0]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            Primeiro elemento &rarr; vendas[0]
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">200</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[1]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            vendas[1] &rarr; 200
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">120</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[2]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            vendas[2] &rarr; 120
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">310</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[3]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            vendas[3] &rarr; 310
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">250</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[4]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            vendas[4] &rarr; 250
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">180</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[5]</div>
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            Último elemento &rarr; vendas[5] ou vendas[-1]
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exemplo em Python: Descobrindo tamanho e limites</h3>
+<pre><code><span class="code-comment"># Criando a lista de dados</span>
+vendas = [150, 200, 120, 310, 250, 180]
+
+<span class="code-comment"># 1. Função len() descobre o total de elementos (N)</span>
+total_itens = len(vendas)
+print("Quantidade total de itens:", total_itens) <span class="code-output"># Saída: 6</span>
+
+<span class="code-comment"># 2. O primeiro elemento SEMPRE está na posição 0</span>
+primeiro = vendas[0]
+print("Primeiro valor:", primeiro) <span class="code-output"># Saída: 150</span>
+
+<span class="code-comment"># 3. O último elemento está no índice (total_itens - 1)</span>
+ultimo_indice = total_itens - 1
+ultimo = vendas[ultimo_indice]
+print("Último valor:", ultimo) <span class="code-output"># Saída: 180</span>
+
+<span class="code-comment"># Em Python, também podemos usar índice negativo -1 para o último item:</span>
+print("Último valor (índice negativo):", vendas[-1]) <span class="code-output"># Saída: 180</span></code></pre>
+
+            <div class="bg-amber-50 border border-amber-200 p-4 rounded-lg mt-4 text-sm text-amber-900">
+                <i class="fas fa-lightbulb text-amber-600 mr-2"></i> <strong>Por que usar listas?</strong> Listas mantêm a <em>ordem cronológica/sequencial</em> dos dados, permitem adicionar ou remover elementos dinamicamente e possibilitam o processamento automatizado com laços de repetição.
+            </div>
+        </section>
+
+        <!-- Seção 2: Percorrendo Listas com Laço while -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">2. Iteração e Controle de Índice com `while`</h2>
+            <p class="mb-4">Para analisar cada valor de uma lista individualmente, podemos usar um laço <code>while</code> guiado por uma variável de controle (geralmente chamada de <code>i</code> ou <code>indice</code>).</p>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Estrutura Padrão do Laço `while`</h3>
+<pre><code><span class="code-comment"># Lista de exemplo</span>
+valores = [10, 20, 30, 40, 50]
+
+<span class="code-comment"># Passo A: Inicializar a variável de controle no índice 0</span>
+i = 0
+
+<span class="code-comment"># Passo B: Condição de parada enquanto 'i' for menor que len(valores)</span>
+<span class="code-keyword">while</span> i &lt; len(valores):
+    print(f"Posição {i} -> Valor: {valores[i]}")
+    
+    <span class="code-comment"># Passo C: Incrementar o índice obrigatoriamente</span>
+    i += 1  <span class="code-comment"># equivalente a i = i + 1</span></code></pre>
+
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                    <h4 class="font-bold text-gray-900 mb-2 text-sm"><i class="fas fa-shield-alt text-blue-600 mr-2"></i>Por que a condição é `i < len(lista)`?</h4>
+                    <p class="text-sm text-gray-700">Se uma lista possui 5 elementos, seus índices válidos vão de <strong>0 até 4</strong>. Ao usar <code>i < len()</code> (neste caso <code>i < 5</code>), o laço para assim que <code>i</code> atinge 5, evitando acessar um índice inexistente.</p>
+                </div>
+                <div class="bg-gray-50 border border-gray-200 p-4 rounded-lg">
+                    <h4 class="font-bold text-gray-900 mb-2 text-sm"><i class="fas fa-exclamation-triangle text-amber-500 mr-2"></i>Cuidado com o Laço Infinito</h4>
+                    <p class="text-sm text-gray-700">Se você esquecer o incremento <code>i += 1</code> dentro do bloco do <code>while</code>, a variável <code>i</code> permanecerá 0 para sempre e o programa nunca encerrará a execução.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Acumulador e Soma de Elementos -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">3. Padrão Acumulador (Calculando a Soma)</h2>
+            <p class="mb-4">O padrão <strong>Acumulador</strong> consiste em criar uma variável (normalmente iniciada em <code>0</code>) antes do laço para ir somando sucessivamente cada elemento visitado na lista.</p>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exemplo: Somatório manual com `while`</h3>
+<pre><code>pontuacoes = [45, 78, 92, 60, 85]
+
+<span class="code-comment"># 1. Variável acumuladora iniciada com zero</span>
+soma_total = 0
+i = 0
+
+<span class="code-comment"># 2. Percorrendo e acumulando</span>
+<span class="code-keyword">while</span> i &lt; len(pontuacoes):
+    soma_total = soma_total + pontuacoes[i] <span class="code-comment"># Adiciona o elemento atual à soma</span>
+    i += 1
+
+print("Soma total calculada:", soma_total) <span class="code-output"># Saída: 360</span></code></pre>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2 mt-8">Alternativa Nátiva do Python: Função `sum()`</h3>
+            <p class="mb-2 text-gray-700">O Python possui a função embutida <code>sum()</code> que realiza exatamente essa mesma acumulação de forma direta:</p>
+<pre class="!my-0 !py-3 !text-sm"><code>pontuacoes = [45, 78, 92, 60, 85]
+soma_direta = sum(pontuacoes)
+print("Soma com sum():", soma_direta) <span class="code-output"># Saída: 360</span></code></pre>
+        </section>
+
+        <!-- Seção 4: Cálculo da Média Aritmética -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">4. Cálculo da Média Aritmética</h2>
+            <p class="mb-4">A média aritmética simples é obtida dividindo a <strong>soma total de todos os elementos</strong> pelo <strong>número total de elementos</strong> (tamanho da lista).</p>
+
+            <div class="bg-gray-100 p-4 rounded-lg text-center font-mono my-6 text-gray-800 text-lg">
+                Média = <span class="text-blue-600 font-bold">soma_total</span> / <span class="text-emerald-600 font-bold">len(lista)</span>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exemplo em Python</h3>
+<pre><code>medicoes = [12.5, 14.0, 15.5, 18.0]
+
+<span class="code-comment"># Passo 1: Obter a soma</span>
+total_soma = sum(medicoes)  <span class="code-comment"># ou via laço while</span>
+
+<span class="code-comment"># Passo 2: Obter a quantidade</span>
+quantidade = len(medicoes)
+
+<span class="code-comment"># Passo 3: Calcular a média</span>
+<span class="code-keyword">if</span> quantidade > 0:
+    media = total_soma / quantidade
+    print(f"Média calculada: {media:.2f}") <span class="code-output"># Saída: Média calculada: 15.00</span>
+<span class="code-keyword">else</span>:
+    print("A lista está vazia!")</code></pre>
+
+            <div class="bg-blue-50 p-4 rounded-lg text-sm text-blue-800">
+                <i class="fas fa-check-circle mr-2"></i> <strong>Boa prática:</strong> Sempre verifique se a quantidade (<code>len()</code>) é maior que zero antes de realizar a divisão, evitando o erro de execução <code>ZeroDivisionError</code> em listas vazias.
+            </div>
+        </section>
+
+        <!-- Seção 5: Algoritmo de Busca Linear -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">5. Algoritmo de Busca Linear</h2>
+            <p class="mb-4">A <strong>Busca Linear</strong> é um algoritmo clássico em que percorremos a lista posição por posição (da primeira à última) comparando cada elemento com um valor desejado (alvo) até encontrá-lo ou concluir que ele não está presente.</p>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exemplo: Busca Linear com `while` e variável de estado (flag)</h3>
+<pre><code>codigos = [102, 305, 408, 201, 509]
+alvo = 201  <span class="code-comment"># Elemento que queremos verificar se existe</span>
+
+encontrou = False
+i = 0
+
+<span class="code-keyword">while</span> i &lt; len(codigos):
+    <span class="code-comment"># Compara o elemento atual da lista com o alvo</span>
+    <span class="code-keyword">if</span> codigos[i] == alvo:
+        encontrou = True
+        <span class="code-comment"># Podemos interromper a busca se já encontramos</span>
+        <span class="code-keyword">break</span>
+    i += 1
+
+<span class="code-keyword">if</span> encontrou:
+    print(f"O valor {alvo} foi encontrado na posição {i}!") <span class="code-output"># Saída: encontrado na posição 3!</span>
+<span class="code-keyword">else</span>:
+    print(f"O valor {alvo} NÃO está na lista.")</code></pre>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2 mt-8">Forma Simplificada em Python: Operador `in`</h3>
+            <p class="mb-2 text-gray-700">Em Python, você também pode checar a existência de um item diretamente utilizando o operador <code>in</code>:</p>
+<pre class="!my-0 !py-3 !text-sm"><code>codigos = [102, 305, 408, 201, 509]
+
+<span class="code-keyword">if</span> 201 <span class="code-keyword">in</span> codigos:
+    print("O código 201 está presente na lista!") <span class="code-output"># Saída exibida</span></code></pre>
+        </section>
+
+        <!-- Seção 6: Identificação de Maior e Menor Valor -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">6. Encontrando Maior e Menor Valor (Extremos)</h2>
+            <p class="mb-4">Para encontrar os valores limite (máximo e mínimo) em uma lista sem usar funções prontas, inicializamos as variáveis <code>maior</code> e <code>menor</code> com o <strong>primeiro elemento da própria lista (<code>lista[0]</code>)</strong>. Depois, percorremos os demais elementos atualizando essas variáveis sempre que um valor ultrapassar o limite atual.</p>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 mb-6 text-amber-900 rounded-r text-sm">
+                <i class="fas fa-exclamation-triangle text-amber-600 mr-2"></i> <strong>Regra de Ouro:</strong> Nunca inicialize <code>maior = 0</code> ou <code>menor = 0</code> arbitrariamente! Se a lista contiver apenas números negativos (ex: <code>[-5, -12, -3]</code>), um <code>maior = 0</code> resultaria em uma resposta errada (0). Inicializar com <code>lista[0]</code> garante compatibilidade com qualquer faixa de dados.
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2">Exemplo: Algoritmo manual de Maior e Menor com `while`</h3>
+<pre><code>amostras = [48, 15, 62, 33, 91, 27]
+
+<span class="code-comment"># 1. Inicializar com o primeiro elemento da própria lista</span>
+maior = amostras[0]
+menor = amostras[0]
+
+i = 1  <span class="code-comment"># Começamos do segundo elemento (índice 1) pois o índice 0 já foi lido</span>
+
+<span class="code-keyword">while</span> i &lt; len(amostras):
+    <span class="code-comment"># Verifica se o elemento atual é MAIOR que o maior registrado até agora</span>
+    <span class="code-keyword">if</span> amostras[i] > maior:
+        maior = amostras[i]
+        
+    <span class="code-comment"># Verifica se o elemento atual é MENOR que o menor registrado até agora</span>
+    <span class="code-keyword">if</span> amostras[i] < menor:
+        menor = amostras[i]
+        
+    i += 1
+
+print("Maior valor encontrado:", maior) <span class="code-output"># Saída: 91</span>
+print("Menor valor encontrado:", menor) <span class="code-output"># Saída: 15</span></code></pre>
+
+            <h3 class="text-lg font-bold text-gray-900 mb-2 mt-8">Funções Embutidas do Python: `max()` e `min()`</h3>
+            <p class="mb-2 text-gray-700">Para facilitar a escrita do dia a dia, o Python disponibiliza as funções nativas <code>max()</code> e <code>min()</code>:</p>
+<pre class="!my-0 !py-3 !text-sm"><code>amostras = [48, 15, 62, 33, 91, 27]
+
+maior_nativo = max(amostras)  <span class="code-output"># Retorna 91</span>
+menor_nativo = min(amostras)  <span class="code-output"># Retorna 15</span></code></pre>
+        </section>
+
+        <!-- Seção 7: Resumo Sintético e Tabela de Referência -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">7. Tabela de Referência Rápida</h2>
+            
+            <div class="overflow-x-auto my-6">
+                <table class="w-full text-left border-collapse border border-gray-200">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-800 text-sm font-semibold">
+                            <th class="p-3 border border-gray-200">Operação / Objetivo</th>
+                            <th class="p-3 border border-gray-200">Sintaxe / Código em Python</th>
+                            <th class="p-3 border border-gray-200">Descrição</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm text-gray-700">
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Tamanho do vetor</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">len(lista)</td>
+                            <td class="p-3 border border-gray-200">Retorna o número total de elementos (N).</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Primeiro elemento</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">lista[0]</td>
+                            <td class="p-3 border border-gray-200">Acessa o elemento na posição inicial (índice 0).</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Último elemento</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">lista[len(lista)-1] ou lista[-1]</td>
+                            <td class="p-3 border border-gray-200">Acessa o elemento na última posição.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Iteração via laço</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">while i &lt; len(lista):</td>
+                            <td class="p-3 border border-gray-200">Percorre o vetor com ponteiro seguro de 0 a N-1.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Soma de elementos</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">sum(lista)</td>
+                            <td class="p-3 border border-gray-200">Retorna o somatório de todos os itens numéricos.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Média aritmética</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">sum(lista) / len(lista)</td>
+                            <td class="p-3 border border-gray-200">Calcula a média de valores da lista.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Verificar existência</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">valor in lista</td>
+                            <td class="p-3 border border-gray-200">Retorna True se o valor existir na lista.</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="p-3 border border-gray-200 font-semibold">Maior e Menor</td>
+                            <td class="p-3 border border-gray-200 font-mono text-blue-700">max(lista), min(lista)</td>
+                            <td class="p-3 border border-gray-200">Encontra os valores limites máximo e mínimo.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Reading Progress Bar Logic
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>

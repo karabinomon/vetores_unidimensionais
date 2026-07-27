@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aula: Vetores (Arrays) Unidimensionais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #374151;
+            line-height: 1.8;
+        }
+
+        /* Reading Progress Bar */
+        #scroll-progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: transparent;
+            z-index: 50;
+        }
+
+        #scroll-progress-bar {
+            height: 100%;
+            background: #2563eb;
+            width: 0%;
+            transition: width 0.1s ease-out;
+        }
+
+        /* Code Blocks */
+        pre {
+            background-color: #f8fafc;
+            color: #1e293b;
+            padding: 1.25rem;
+            border-radius: 0.5rem;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-output { color: #059669; }
+        .code-error { color: #dc2626; }
+
+        /* Array Visualization */
+        .array-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+        
+        .array-element-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .array-box {
+            background-color: #ffffff;
+            border: 2px solid #cbd5e1;
+            color: #0f172a;
+            font-size: 1.5rem;
+            font-weight: 600;
+            width: 4rem;
+            height: 4rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+        
+        .array-box.highlight {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+            color: #1d4ed8;
+        }
+
+        .array-index {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body class="antialiased pb-20">
+
+    <!-- Reading Progress -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress-bar"></div>
+    </div>
+
+    <!-- Hero Header -->
+    <header class="max-w-3xl mx-auto px-6 pt-24 pb-12">
+        <h1 class="text-4xl md:text-5xl font-black mb-4 text-gray-900 leading-tight tracking-tight">Vetores (arrays) unidimensionais</h1>
+        <h2 class="text-xl text-gray-500 font-light">Declaração e inicialização de vetores</h2>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-3xl mx-auto px-6">
+
+        <!-- Conceito: Vetores -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">O que são Vetores?</h2>
+            <p class="mb-6">Vetores (ou <em>arrays</em>) são estruturas lineares que organizam vários dados do mesmo tipo em uma única variável, um após o outro. Em vez de criar várias variáveis, você guarda tudo em sequência, acessando cada valor por sua posição (índice).</p>
+
+            <div class="my-10">
+                <div class="font-mono text-lg mb-4 text-gray-800">notas = [7.5, 8.0, 6.5, 9.0, 7.0]</div>
+                
+                <p class="text-sm text-gray-500 mb-4">Passe o mouse sobre os elementos para inspecionar os índices:</p>
+                <div class="array-container">
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">7.5</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[0]</div>
+                        <!-- Tooltip -->
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            notas[0] &rarr; 7.5
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">8.0</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[1]</div>
+                        <!-- Tooltip -->
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            notas[1] &rarr; 8.0
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">6.5</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[2]</div>
+                        <!-- Tooltip -->
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            notas[2] &rarr; 6.5
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">9.0</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[3]</div>
+                        <!-- Tooltip -->
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            notas[3] &rarr; 9.0
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+
+                    <div class="array-element-group group relative cursor-pointer">
+                        <div class="array-box group-hover:border-blue-500 group-hover:bg-blue-50 group-hover:text-blue-700 transition-colors">7.0</div>
+                        <div class="array-index group-hover:text-blue-600 transition-colors">[4]</div>
+                        <!-- Tooltip -->
+                        <div class="absolute -top-16 opacity-0 group-hover:opacity-100 transition-opacity bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm whitespace-nowrap pointer-events-none z-10 pt-3">
+                            notas[4] &rarr; 7.0
+                            <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-6 text-sm text-gray-500"><i class="fas fa-exclamation-triangle text-amber-500 mr-1"></i> <strong>Atenção:</strong> A indexação na maioria das linguagens (incluindo Python) sempre começa em 0.</p>
+            </div>
+
+            <h3 class="text-xl font-bold mb-4 mt-10 text-gray-900">Por que usar vetores?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Sem Vetor (Variáveis Soltas)</h4>
+                    <pre class="!my-0 !py-3 !text-sm"><code>nota1 = 7.5
+nota2 = 8.0
+nota3 = 6.5
+<span class="opacity-50">...</span></code></pre>
+                    <p class="text-sm text-gray-600 mt-2">Difícil de gerenciar quando o número de itens cresce.</p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-2">Com Vetor (Array)</h4>
+                    <pre class="!my-0 !py-3 !text-sm h-[106px] flex items-center"><code>notas = [7.5, 8.0, 6.5]</code></pre>
+                    <p class="text-sm text-gray-600 mt-2">Apenas uma variável. Acesso fácil por índice.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Python na Prática -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Trabalhando com Listas em Python</h2>
+            <p class="mb-4">Em Python, os vetores são chamados de <strong>listas</strong>. Criamos uma lista usando colchetes <code>[]</code> e separando os itens por vírgulas.</p>
+
+<pre><code><span class="code-comment"># Declarando e inicializando a lista</span>
+idades = [14, 15, 16]
+
+<span class="code-comment"># Acessando elementos pelo índice</span>
+print(idades[0])  <span class="code-output"># Saída: 14</span>
+print(idades[1])  <span class="code-output"># Saída: 15</span></code></pre>
+
+            <div class="mt-8 space-y-8">
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Descobrindo o Tamanho (len)</h3>
+                    <p class="mb-2 text-gray-700">A função <code>len()</code> descobre quantos itens a lista possui.</p>
+<pre class="!my-0 !py-3 !text-sm"><code>idades = [14, 15, 16]
+print(len(idades)) <span class="code-output"># Saída: 3</span></code></pre>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-2">Alterando Valores</h3>
+                    <p class="mb-2 text-gray-700">Acesse a posição pelo índice e atribua um novo valor com o sinal de igual <code>=</code>.</p>
+<pre class="!my-0 !py-3 !text-sm"><code>idades = [10, 25, 32]
+idades[0] = 18
+print(idades) <span class="code-output"># Saída: [18, 25, 32]</span></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Erros Comuns -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Erros Comuns</h2>
+            <p class="mb-6">Cuidado ao acessar os índices! Estes são os tropeços mais frequentes de quem está começando:</p>
+            
+            <div class="space-y-6">
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">1. Índice inexistente (Out of Range)</h3>
+                    <p class="text-gray-700 mb-3">Tentar acessar uma posição que está além do tamanho da lista.</p>
+<pre class="!my-0 !py-3 !text-sm"><code>notas = [7.5, 8.0, 6.5] <span class="code-comment"># Índices válidos: 0, 1 e 2</span>
+print(notas[3]) 
+<span class="code-error">IndexError: list index out of range</span></code></pre>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">2. Confundir ordem com índice</h3>
+                    <p class="text-gray-700 mb-3">Querer acessar o primeiro elemento e usar o número 1.</p>
+<pre class="!my-0 !py-3 !text-sm"><code>notas = [7.5, 8.0, 6.5]
+print(notas[1]) <span class="code-comment"># Retorna 8.0 (este é o SEGUNDO elemento!)</span>
+print(notas[0]) <span class="code-output"># Forma correta de pegar o PRIMEIRO: 7.5</span></code></pre>
+                </div>
+            </div>
+
+            <div class="mt-8 border border-gray-200 bg-gray-50 p-6 rounded-lg text-center">
+                <h4 class="font-bold text-gray-900 mb-2 text-lg">A Regra de Ouro</h4>
+                <p class="text-gray-700">Um vetor com <strong>N</strong> elementos possui índices que vão de <strong>0</strong> até <strong>N-1</strong>.</p>
+            </div>
+        </section>
+
+        <!-- Prática Guiada -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Prática</h2>
+            
+            <p class="mb-6">Você está iniciando o desenvolvimento de um pequeno sistema. Crie um programa em Python que:</p>
+            
+            <ol class="list-decimal pl-5 space-y-4 mb-6 text-gray-700">
+                <li class="pl-2">
+                    <strong>Declare e inicialize</strong> um vetor para armazenar cinco números inteiros (ex: notas, idades ou quantidades).
+                </li>
+                <li class="pl-2">
+                    <strong>Mostre na tela</strong> (usando <code>print</code>) cada valor armazenado e sua respectiva posição (índice).
+                </li>
+            </ol>
+            
+            <div class="bg-blue-50 text-blue-800 p-4 rounded-lg mt-6 text-sm">
+                <i class="fas fa-lightbulb mr-2"></i> <strong>Dica:</strong> Lembre-se que o primeiro valor deve ser acessado no índice [0].
+            </div>
+        </section>
+
+        <!-- Resumo -->
+        <section class="mb-16">
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-2">Resumo</h2>
+            
+            <ul class="space-y-4 text-gray-700">
+                <li class="flex items-start">
+                    <span class="font-bold mr-3 text-blue-600">1.</span>
+                    <span>Aprendemos que vetores são <strong>estruturas lineares</strong> usadas para organizar vários dados do mesmo tipo em uma única variável.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="font-bold mr-3 text-blue-600">2.</span>
+                    <span>Compreendemos que o acesso aos elementos é feito por índices que <strong>começam em zero</strong>, exigindo atenção para evitar o erro de <em>Out of Range</em>.</span>
+                </li>
+                <li class="flex items-start">
+                    <span class="font-bold mr-3 text-blue-600">3.</span>
+                    <span>Entendemos como <strong>declarar, inicializar, verificar tamanho (len) e atribuir novos valores</strong> a vetores em Python.</span>
+                </li>
+            </ul>
+        </section>
+
+    </main>
+
+    <script>
+        // Reading Progress Bar Logic
+        window.onscroll = function() {
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress-bar").style.width = scrolled + "%";
+        };
+    </script>
+</body>
+</html>
